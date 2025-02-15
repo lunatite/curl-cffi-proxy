@@ -6,5 +6,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 RUN useradd -m appuser 
 USER appuser
-EXPOSE 8000
+EXPOSE 8001
 CMD ["gunicorn", "--bind", "0.0.0.0:8001", "-k", "uvicorn.workers.UvicornWorker", "main:app"]
