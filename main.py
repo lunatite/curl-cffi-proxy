@@ -48,7 +48,8 @@ def handle_request(payload : RequestPayload):
             "status_code" : response.status_code,
             "headers" : response.headers,
             "data" : response.json() if response.headers["Content-Type"] == "application/json" else response.text,
-            "cookies" : response.cookies
+            "cookies" : response.cookies,
+            "url" : response.url,
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))      
