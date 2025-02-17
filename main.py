@@ -16,6 +16,7 @@ class RequestPayload(BaseModel):
     cookies: Optional[Dict[str, str]] = None
     impersonate: Optional[str] = None
     proxies: Optional[Dict[str, str]] = None
+    return_data : Optional[bool] = True
     
 BROWSER_TYPES = set(get_args(BrowserTypeLiteral))    
 
@@ -44,12 +45,17 @@ def handle_request(payload : RequestPayload):
             proxies=payload.proxies
         )
         
-        return {
+        result = {
             "status_code" : response.status_code,
             "headers" : response.headers,
-            "data" : response.json() if response.headers["Content-Type"] == "application/json" else response.text,
             "cookies" : response.cookies,
             "url" : response.url,
         }
+        
+        if payload.return_data:
+            result["data"] = response.json() if response.headers.get("Content-Type") == "application/json" else response.text
+            
+        return result        
+        
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))      
