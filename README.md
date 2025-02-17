@@ -50,7 +50,8 @@ POST /
   "cookies": { "session": "abcd1234" },
   "data": { "field": "value" },
   "impersonate": "chrome",
-  "proxies": { "http": "http://proxy.example.com:8081" }
+  "proxies": { "http": "http://proxy.example.com:8081" },
+  "return_data": true
 }
 ```
 
