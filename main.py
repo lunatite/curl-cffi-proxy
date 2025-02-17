@@ -30,7 +30,7 @@ def handle_request(payload : RequestPayload):
         if method not in {"GET" , "POST" , "DELETE" , "PUT"}:
             raise HTTPException(status_code=400 , detail="Unsupported HTTP method")
         
-        if not is_valid_browser_type(payload.impersonate):
+        if payload.impersonate and not is_valid_browser_type(payload.impersonate):
             raise HTTPException(status_code=400 , detail="Unsupported impersonate")
         
         response = requests.request(
