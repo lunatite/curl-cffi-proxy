@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
 from typing import get_args
 import curl_cffi.requests as requests
 from curl_cffi.requests import BrowserTypeLiteral
@@ -44,11 +45,13 @@ def handle_request(payload : RequestPayload):
             proxies=payload.proxies
         )
         
-        return {
+        content = {
             "status_code" : response.status_code,
             "headers" : response.headers,
             "data" : response.json() if response.headers["Content-Type"] == "application/json" else response.text,
             "cookies" : response.cookies
         }
+        
+        return JSONResponse(content=content , status_code=response.status_code)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))      
