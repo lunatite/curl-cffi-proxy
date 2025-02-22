@@ -48,8 +48,8 @@ def handle_request(payload : RequestPayload):
         
         content = {
             "status_code" : response.status_code,
-            "headers" : response.headers,
-            "cookies" : response.cookies,
+            "headers" : dict(response.headers),
+            "cookies" : response.cookies.get_dict(),
             "url" : response.url,
         }
         
