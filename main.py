@@ -3,7 +3,7 @@ from typing import get_args
 import curl_cffi.requests as requests
 from curl_cffi.requests import BrowserTypeLiteral
 from pydantic import BaseModel
-from typing import Dict, Optional
+from typing import Dict, Optional , Any
 
 app = FastAPI()
 
@@ -12,7 +12,7 @@ class RequestPayload(BaseModel):
     url: str
     params: Optional[Dict[str, str]] = None
     headers: Optional[Dict[str, str]] = None
-    data: Optional[Dict[str, str]] = None 
+    data: Optional[Dict[str, Any]] = None 
     cookies: Optional[Dict[str, str]] = None
     impersonate: Optional[str] = None
     proxies: Optional[Dict[str, str]] = None
