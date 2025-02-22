@@ -17,6 +17,7 @@ class RequestPayload(BaseModel):
     cookies: Optional[Dict[str, str]] = None
     impersonate: Optional[str] = None
     proxies: Optional[Dict[str, str]] = None
+    return_data : Optional[bool] = True
     
 BROWSER_TYPES = set(get_args(BrowserTypeLiteral))    
 
@@ -31,7 +32,7 @@ def handle_request(payload : RequestPayload):
         if method not in {"GET" , "POST" , "DELETE" , "PUT"}:
             raise HTTPException(status_code=400 , detail="Unsupported HTTP method")
         
-        if not is_valid_browser_type(payload.impersonate):
+        if payload.impersonate and not is_valid_browser_type(payload.impersonate):
             raise HTTPException(status_code=400 , detail="Unsupported impersonate")
         
         response = requests.request(
@@ -48,10 +49,15 @@ def handle_request(payload : RequestPayload):
         content = {
             "status_code" : response.status_code,
             "headers" : response.headers,
-            "data" : response.json() if response.headers["Content-Type"] == "application/json" else response.text,
-            "cookies" : response.cookies
+            "cookies" : response.cookies,
+            "url" : response.url,
         }
         
+        if payload.return_data:
+            content["data"] = response.json() if response.headers.get("Content-Type") == "application/json" else response.text
+            
         return JSONResponse(content=content , status_code=response.status_code)
+ 
+        
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))      
