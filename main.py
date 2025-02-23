@@ -54,7 +54,7 @@ def handle_request(payload : RequestPayload):
         }
         
         if payload.return_data:
-            content["data"] = response.json() if response.headers.get("Content-Type") == "application/json" else response.text
+            content["data"] = response.json() if "application/json" in response.headers.get("Content-Type") else response.text
             
         return JSONResponse(content=content , status_code=response.status_code)
  
